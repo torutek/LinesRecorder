@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinesRecorder", "LinesRecorder\LinesRecorder.csproj", "{CBDA5AA8-445D-4125-B9E9-7506BD88B972}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CBDA5AA8-445D-4125-B9E9-7506BD88B972}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBDA5AA8-445D-4125-B9E9-7506BD88B972}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBDA5AA8-445D-4125-B9E9-7506BD88B972}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBDA5AA8-445D-4125-B9E9-7506BD88B972}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53BE1999-846A-431B-B420-77214F5ECF2E}
+	EndGlobalSection
+EndGlobal
