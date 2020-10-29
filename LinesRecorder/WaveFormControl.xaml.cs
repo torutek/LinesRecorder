@@ -55,8 +55,8 @@ namespace LinesRecorder
 
 			var middle = waveForm.Points.Count / 2;
 			var xPos = middle * XScale;
-			waveForm.Points.Insert(middle, new Point(xPos, Height * (1 - value)));
-			waveForm.Points.Insert(middle, new Point(xPos, Height));
+			waveForm.Points.Insert(middle, new Point(xPos, ActualHeight * (1 - value)));
+			waveForm.Points.Insert(middle, new Point(xPos, ActualHeight));
 		}
 	}
 }
