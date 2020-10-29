@@ -8,7 +8,9 @@
         Title="MainWindow" Height="500" Width="800">
     <StackPanel Orientation="Vertical">
         <ProgressBar Maximum="100" Value="{Binding Path=AudioLevel, Mode=OneWay}" Height="20" />
-        <TextBlock Text="{Binding Path=LineText, Mode=OneWay, FallbackValue=LineToRecordAppearsHere}" HorizontalAlignment="Center" FontSize="40" /> <!-- TODO: Font size should scale to fit -->
+        <Viewbox StretchDirection="DownOnly">
+            <TextBlock Text="{Binding Path=LineText, Mode=OneWay, FallbackValue=Line To Record Appears Here}" HorizontalAlignment="Center" FontSize="40" />
+        </Viewbox>
         <local:WaveformControl x:Name="waveFormControl" Height="300" />
 
         <Grid Height="40">
