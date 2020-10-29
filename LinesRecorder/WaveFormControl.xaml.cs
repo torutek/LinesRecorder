@@ -14,9 +14,9 @@ using System.Windows.Shapes;
 namespace LinesRecorder
 {
 	/// <summary>
-	/// Interaction logic for WaveFormControl.xaml
+	/// Interaction logic for WaveformControl.xaml
 	/// </summary>
-	public partial class WaveFormControl : UserControl
+	public partial class WaveformControl : UserControl
 	{
 		readonly Polygon waveForm = new Polygon();
 
@@ -24,7 +24,7 @@ namespace LinesRecorder
 
 		private RecordingManager _recording;
 
-		public WaveFormControl()
+		public WaveformControl()
 		{
 			InitializeComponent();
 
