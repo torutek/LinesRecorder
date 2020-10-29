@@ -42,7 +42,7 @@ namespace LinesRecorder
 			InitializeComponent();
 			DataContext = this;
 
-			_lines = File.ReadAllLines("lines.txt");
+			_lines = File.ReadAllLines("lines.txt").Select(l => l.Trim()).ToArray();
 
 			_recording = new RecordingManager();
 
