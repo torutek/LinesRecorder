@@ -1,4 +1,5 @@
-﻿using NAudio.Wave;
+﻿using Microsoft.Win32;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +25,8 @@ namespace LinesRecorder
 	/// </summary>
 	public partial class MainWindow : Window, INotifyPropertyChanged
 	{
-		private readonly string[] _lines;
+		private string _root;
+		private string[] _lines;
 		private RecordingManager _recording;
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -32,17 +34,15 @@ namespace LinesRecorder
 		public int LineIndex { get; private set; }
 
 		public int AudioLevel { get; private set; }
-		public string LineText => _lines[LineIndex];
+		public string LineText => _lines == null ? "Please load a lines file" : _lines[LineIndex];
 		public string RecordText => _recording.Recording ? "Stop Recording" : "Record";
 		public string PlayText => _recording.Playing ? "Stop" : "Play";
-		public string IndexText => (LineIndex + 1) + " / " + _lines.Length;
+		public string IndexText => _lines == null ? "" : (LineIndex + 1) + " / " + _lines.Length;
 
 		public MainWindow()
 		{
 			InitializeComponent();
 			DataContext = this;
-
-			_lines = File.ReadAllLines("lines.txt").Select(l => l.Trim()).ToArray();
 
 			_recording = new RecordingManager();
 
@@ -58,8 +58,6 @@ namespace LinesRecorder
 			_recording.PlaybackStopped += () => OnPropertyChanged(nameof(PlayText));
 
 			waveFormControl.SetRecordingManager(_recording);
-
-			SetIndex(0);
 		}
 
 		private void OnPropertyChanged([CallerMemberName] string name = null)
@@ -67,6 +65,29 @@ namespace LinesRecorder
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
 
+		#region Menu
+		private void MenuOpen_Click(object sender, RoutedEventArgs e)
+		{
+			var openDialog = new OpenFileDialog();
+			openDialog.DefaultExt = "txt";
+
+			if (openDialog.ShowDialog() == true)
+			{
+				var filename = openDialog.FileName;
+				
+				_root = System.IO.Path.GetDirectoryName(filename);
+				_lines = File.ReadAllLines(filename).Select(l => l.Trim()).ToArray();
+				SetIndex(0);
+			}
+		}
+
+		private void MenuExit_Click(object sender, RoutedEventArgs e)
+		{
+			Application.Current.Shutdown();
+		}
+		#endregion
+
+		#region Buttons
 		private void Prev_Click(object sender, RoutedEventArgs e)
 		{
 			SetIndex(LineIndex - 1);
@@ -85,6 +106,8 @@ namespace LinesRecorder
 			var dir = LineIndex.ToString().PadLeft(4, '0') + " " + _lines[LineIndex];
 			foreach (var c in System.IO.Path.GetInvalidFileNameChars())
 				dir = dir.Replace(c.ToString(), "");
+
+			dir = System.IO.Path.Combine(_root, dir);
 
 			if (!Directory.Exists(dir))
 				Directory.CreateDirectory(dir);
@@ -111,7 +134,9 @@ namespace LinesRecorder
 			else
 				_recording.StartRecording();
 		}
+		#endregion
 
+		#region Keyboard input
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
 			switch (e.Key)
@@ -147,5 +172,6 @@ namespace LinesRecorder
 					break;
 			}
 		}
+		#endregion
 	}
 }

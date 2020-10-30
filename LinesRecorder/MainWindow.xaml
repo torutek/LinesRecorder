@@ -8,6 +8,13 @@
         Title="MainWindow" Height="500" Width="800">
     <DockPanel>
         <StackPanel DockPanel.Dock="Top">
+            <Menu>
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Open" Click="MenuOpen_Click"/>
+                    <Separator />
+                    <MenuItem Header="_Exit" Click="MenuExit_Click" />
+                </MenuItem>
+            </Menu>
             <ProgressBar Maximum="100" Value="{Binding Path=AudioLevel, Mode=OneWay}" Height="20" />
             <Viewbox StretchDirection="DownOnly">
                 <TextBlock Text="{Binding Path=LineText, Mode=OneWay, FallbackValue=Line To Record Appears Here}" HorizontalAlignment="Center" FontSize="40" />
