@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,9 +26,11 @@ namespace LinesRecorder
 	/// </summary>
 	public partial class MainWindow : Window, INotifyPropertyChanged
 	{
+		private readonly RecordingManager _recording;
+		private readonly FileSystemWatcher _fileWatcher = new FileSystemWatcher();
+
 		private string _root;
 		private string[] _lines;
-		private RecordingManager _recording;
 
 		public event PropertyChangedEventHandler PropertyChanged;
 
@@ -45,7 +48,6 @@ namespace LinesRecorder
 			DataContext = this;
 
 			_recording = new RecordingManager();
-
 			_recording.AudioLevelChanged += l =>
 			{
 				AudioLevel = (int)(100 * l);
@@ -53,9 +55,12 @@ namespace LinesRecorder
 			};
 			_recording.RecordingStarted += () => OnPropertyChanged(nameof(RecordText));
 			_recording.RecordingStopped += () => OnPropertyChanged(nameof(RecordText));
-
 			_recording.PlaybackStarted += () => OnPropertyChanged(nameof(PlayText));
 			_recording.PlaybackStopped += () => OnPropertyChanged(nameof(PlayText));
+
+			_fileWatcher.NotifyFilter = NotifyFilters.LastWrite;
+			_fileWatcher.Changed += FileWatcher_Changed;
+
 
 			waveFormControl.SetRecordingManager(_recording);
 		}
@@ -65,19 +70,48 @@ namespace LinesRecorder
 			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 		}
 
+		private void FileWatcher_Changed(object sender, FileSystemEventArgs e)
+		{
+			for (var i = 0; i < 50; i++)
+			{
+				try
+				{
+					//Can fail if the file is still being written to
+					LoadFile(e.FullPath, false);
+					return;
+				}
+				catch (Exception)
+				{
+					Thread.Sleep(1);
+				}
+			}
+		}
+
+		private void LoadFile(string filename, bool resetToFirstLine = true)
+		{
+			_root = System.IO.Path.GetDirectoryName(filename);
+			_lines = File.ReadAllLines(filename).Select(l => l.Trim()).ToArray();
+			SetIndex(resetToFirstLine ? 0 : LineIndex);
+
+			_fileWatcher.Path = _root;
+			_fileWatcher.Filter = System.IO.Path.GetFileName(filename);
+		}
+
 		#region Menu
 		private void MenuOpen_Click(object sender, RoutedEventArgs e)
 		{
+			_fileWatcher.EnableRaisingEvents = false;
+
 			var openDialog = new OpenFileDialog();
 			openDialog.DefaultExt = "txt";
 
 			if (openDialog.ShowDialog() == true)
 			{
 				var filename = openDialog.FileName;
+
+				LoadFile(filename);
 				
-				_root = System.IO.Path.GetDirectoryName(filename);
-				_lines = File.ReadAllLines(filename).Select(l => l.Trim()).ToArray();
-				SetIndex(0);
+				_fileWatcher.EnableRaisingEvents = true;
 			}
 		}
 
