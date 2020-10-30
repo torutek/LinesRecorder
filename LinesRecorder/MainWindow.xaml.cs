@@ -112,26 +112,40 @@ namespace LinesRecorder
 				_recording.StartRecording();
 		}
 
-		/*protected override void OnKeyDown(KeyEventArgs e)
+		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			base.OnKeyDown(e);
-
 			switch (e.Key)
 			{
-				case Key.LeftCtrl:
-				case Key.RightCtrl:
-					if (_recording.Recording)
-						_recording.StopRecording();
-					else
+				case Key.Left:
+					Prev_Click(this, null);
+					break;
+				case Key.Right:
+					Next_Click(this, null);
+					break;
+				case Key.Down:
+					if (!_recording.Recording)
 						_recording.StartRecording();
 					break;
-				case Key.Space:
+				case Key.Up:
 					_recording.Play();
 					break;
 				default:
 					//Nothing
 					break;
 			}
-		}*/
+		}
+
+		protected override void OnKeyUp(KeyEventArgs e)
+		{
+			switch (e.Key)
+			{
+				case Key.Down:
+					_recording.StopRecording();
+					break;
+				default:
+					//Nothing
+					break;
+			}
+		}
 	}
 }

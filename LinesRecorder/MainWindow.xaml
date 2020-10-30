@@ -21,10 +21,10 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="0" Content="Prev" Click="Prev_Click" />
-                <Button Grid.Column="1" Content="{Binding Path=RecordText, Mode=OneWay, FallbackValue=Record}" Click="RecordToggle_Click" />
-                <Button Grid.Column="2" Content="{Binding Path=PlayText, Mode=OneWay, FallbackValue=Play}" Click="PlayToggle_Click"/>
-                <Button Grid.Column="3" Content="Next" Click="Next_Click"/>
+                <Button Grid.Column="0" Content="Prev" Click="Prev_Click" ToolTip="Left Arrow" />
+                <Button Grid.Column="1" Content="{Binding Path=RecordText, Mode=OneWay, FallbackValue=Record}" Click="RecordToggle_Click" ToolTip="Down Arrow (Hold)" />
+                <Button Grid.Column="2" Content="{Binding Path=PlayText, Mode=OneWay, FallbackValue=Play}" Click="PlayToggle_Click" ToolTip="Up Arrow" />
+                <Button Grid.Column="3" Content="Next" Click="Next_Click" ToolTip="Right Arrow" />
             </Grid>
             <TextBlock Text="{Binding Path=IndexText, Mode=OneWay, FallbackValue=???/???}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
         </StackPanel>
