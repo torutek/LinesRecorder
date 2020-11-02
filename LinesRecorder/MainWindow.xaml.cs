@@ -63,6 +63,8 @@ namespace LinesRecorder
 
 
 			waveFormControl.SetRecordingManager(_recording);
+
+			RefreshDeviceMenu();
 		}
 
 		private void OnPropertyChanged([CallerMemberName] string name = null)
@@ -118,6 +120,26 @@ namespace LinesRecorder
 		private void MenuExit_Click(object sender, RoutedEventArgs e)
 		{
 			Application.Current.Shutdown();
+		}
+
+		private void RefreshDeviceMenu()
+		{
+			DeviceMenu.Items.Clear();
+			var devices = RecordingManager.GetDeviceNames();
+			for (var i = 0; i < devices.Length; i++)
+			{
+				var localI = i;
+				var item = new MenuItem
+				{
+					Header = devices[i],
+				};
+				item.Click += (object sender, RoutedEventArgs e) => { _recording.DeviceIndex = localI; RefreshDeviceMenu(); };
+
+				if (i == _recording.DeviceIndex)
+					item.FontWeight = FontWeights.Bold;
+
+				DeviceMenu.Items.Add(item);
+			}
 		}
 		#endregion
 

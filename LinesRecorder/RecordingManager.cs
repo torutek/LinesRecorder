@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Documents;
 
 namespace LinesRecorder
@@ -41,24 +42,40 @@ namespace LinesRecorder
 			_waveIn.DataAvailable += _waveIn_DataAvailable;
 			_waveIn.WaveFormat = new WaveFormat(44100, 1);
 
-			int waveInDevices = WaveIn.DeviceCount;
-			if (waveInDevices != 1)
-			{
-				for (int waveInDevice = 0; waveInDevice < waveInDevices; waveInDevice++)
-				{
-					WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(waveInDevice);
-					Console.WriteLine("Device {0}: {1}, {2} channels", waveInDevice, deviceInfo.ProductName, deviceInfo.Channels);
-				}
-
-				Debugger.Break();
-				//_waveIn.DeviceNumber = 0; //^^
-			}
-
 			_waveIn.StartRecording();
 
 			_waveOut = new WaveOut();
 			_waveOut.Init(this);
 			_waveOut.PlaybackStopped += (s, e) => { PlaybackStopped?.Invoke(); };
+		}
+
+		public static string[] GetDeviceNames()
+		{
+			var res = new List<string>();
+			int waveInDevices = WaveIn.DeviceCount;
+			for (int waveInDevice = 0; waveInDevice < waveInDevices; waveInDevice++)
+			{
+				WaveInCapabilities deviceInfo = WaveIn.GetCapabilities(waveInDevice);
+				res.Add(deviceInfo.ProductName);
+				//Console.WriteLine("Device {0}: {1}, {2} channels", waveInDevice, deviceInfo.ProductName, deviceInfo.Channels);
+			}
+
+			return res.ToArray();
+		}
+
+		public int DeviceIndex
+		{
+			get { return _waveIn.DeviceNumber; }
+			set
+			{
+				//Can't do this on the main UI thread, otherwise for some reason we just stop and don't start again
+				Task.Run(() =>
+				{
+					_waveIn.StopRecording();
+					_waveIn.DeviceNumber = value;
+					_waveIn.StartRecording();
+				});
+			}
 		}
 
 		private void _waveIn_DataAvailable(object sender, WaveInEventArgs e)

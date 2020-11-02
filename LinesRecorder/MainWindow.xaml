@@ -14,6 +14,7 @@
                     <Separator />
                     <MenuItem Header="_Exit" Click="MenuExit_Click" />
                 </MenuItem>
+                <MenuItem Name="DeviceMenu" Header="_Device" />
             </Menu>
             <ProgressBar Maximum="100" Value="{Binding Path=AudioLevel, Mode=OneWay}" Height="20" />
             <Viewbox StretchDirection="DownOnly">
