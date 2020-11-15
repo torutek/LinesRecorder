@@ -42,7 +42,8 @@ namespace LinesRecorder
 			_waveIn.DataAvailable += _waveIn_DataAvailable;
 			_waveIn.WaveFormat = new WaveFormat(44100, 1);
 
-			_waveIn.StartRecording();
+			if (WaveIn.DeviceCount > 0)
+				_waveIn.StartRecording();
 
 			_waveOut = new WaveOut();
 			_waveOut.Init(this);

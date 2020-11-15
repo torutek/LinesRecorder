@@ -37,7 +37,7 @@ namespace LinesRecorder
 		public int LineIndex { get; private set; }
 
 		public int AudioLevel { get; private set; }
-		public string LineText => _lines == null ? "Please load a lines file" : _lines[LineIndex];
+		public string LineText => WaveIn.DeviceCount == 0 ? "No audio input device detected. Restart app after connecting" : _lines == null ? "Please load a lines file" : _lines[LineIndex];
 		public string RecordText => _recording.Recording ? "Stop Recording" : "Record";
 		public string PlayText => _recording.Playing ? "Stop" : "Play";
 		public string IndexText => _lines == null ? "" : (LineIndex + 1) + " / " + _lines.Length;
